@@ -1,6 +1,6 @@
 import { initObservability } from "@/app/observability";
 import { StreamingTextResponse } from "ai";
-import { ChatMessage, MessageContent, OpenAI } from "llamaindex";
+import { ChatMessage, MessageContent, Ollama } from "llamaindex";
 import { NextRequest, NextResponse } from "next/server";
 import { createChatEngine } from "./engine/chat";
 import { LlamaIndexStream } from "./llamaindex-stream";
@@ -44,16 +44,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const llm = new OpenAI({
-      model: (process.env.MODEL as any) ?? "gpt-3.5-turbo",
-      maxTokens: 512,
-    });
+    const llm = new Ollama({ model: "qwen:0.5b-chat-v1.5-q5_K_M", temperature: 0.75 });
 
     const chatEngine = await createChatEngine(llm);
 
     // Convert message content from Vercel/AI format to LlamaIndex/OpenAI format
     const userMessageContent = convertMessageContent(
-      userMessage.content,
+      userMessage.content as string,
       data?.imageUrl,
     );
 
