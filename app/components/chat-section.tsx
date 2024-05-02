@@ -3,8 +3,8 @@
 import { Message } from "ai";
 import { useChat } from "ai/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CharType } from "../constants";
-import { ChatMsgCtx } from "./context";
+import { CharType, defaultChatConfig } from "../constants";
+import { ChatMsgCtx, IChatMsgCtx } from "./context";
 import { ChatInput, ChatMessages } from "./ui/chat";
 
 export default function ChatSection() {
@@ -67,11 +67,16 @@ export default function ChatSection() {
     );
   }, [messages]);
 
-  const ctx = {
+  const ctx: IChatMsgCtx = {
     msgs,
     setMsgs,
     prevChar,
     setPrevChar,
+    clearHistory: () => {
+      setMsgs([]);
+      setMessages([]);
+    },
+    chatConfig: defaultChatConfig,
   };
 
   return (

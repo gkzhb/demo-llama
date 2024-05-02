@@ -1,8 +1,9 @@
 import { Check, Copy } from "lucide-react";
 
-import { ECharacter, characterInfoMap } from "@/app/constants";
 import { JSONValue, Message } from "ai";
 import Image from "next/image";
+import { useContext } from "react";
+import { ChatMsgCtx } from "../../context";
 import { Button } from "../button";
 import ChatAvatar from "./chat-avatar";
 import Markdown from "./markdown";
@@ -37,13 +38,19 @@ function ChatMessageData({ messageData }: { messageData: JSONValue }) {
 
 export default function ChatMessage(chatMessage: Message) {
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
-  const char: ECharacter | undefined = (chatMessage as any).char;
+  const { chatConfig } = useContext(ChatMsgCtx);
+  const { characterInfoMap } = chatConfig;
+  const char: string | undefined = (chatMessage as any).char;
   return (
     <div className="flex items-start gap-4 pr-5 pt-5">
       <ChatAvatar role={chatMessage.role} />
       <div className="group flex flex-1 justify-between gap-2">
         <div className="flex-1 space-y-4">
-          {char && <div>{characterInfoMap[char].name}:</div>}
+          {char && characterInfoMap[char] && (
+            <div className="font-bold">
+              {characterInfoMap[char].name} ({characterInfoMap[char].job}) :
+            </div>
+          )}
           {chatMessage.data && (
             <ChatMessageData messageData={chatMessage.data} />
           )}

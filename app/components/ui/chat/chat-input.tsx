@@ -1,9 +1,3 @@
-import {
-  characterInfoMap,
-  characters,
-  chatTopicPrompt,
-  getUserPrompt,
-} from "@/app/constants";
 import { useContext, useEffect, useState } from "react";
 import { ChatMsgCtx } from "../../context";
 import { Button } from "../button";
@@ -27,12 +21,15 @@ export default function ChatInput(
   const { input, setInput, setMessages, handleSubmit } = props;
   const [chatInput, setChatInput] = useState("");
 
-  const { msgs, prevChar, setPrevChar } = useContext(ChatMsgCtx);
+  const { msgs, clearHistory, prevChar, setPrevChar, chatConfig } =
+    useContext(ChatMsgCtx);
 
+  const { model, characters, getUserPrompt, characterInfoMap, chatTopicSystemPrompt } =
+    chatConfig;
   const onSubmit = (
     e: React.FormEvent<HTMLFormElement> = new CustomEvent("form") as any,
   ) => {
-    handleSubmit(e, { data: { char: prevChar } });
+    handleSubmit(e, { data: { model } });
   };
 
   useEffect(() => {
@@ -59,17 +56,25 @@ export default function ChatInput(
                   role: "system",
                   content: [
                     characterInfoMap[char].description,
-                    chatTopicPrompt,
+                    chatTopicSystemPrompt,
                   ].join("\n"),
                 },
                 ...msgs,
               ]);
-              setInput(getUserPrompt(char));
+              setInput(getUserPrompt(char, characterInfoMap));
             }}
           >
             {characterInfoMap[char].name}({characterInfoMap[char].job})
           </Button>
         ))}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={clearHistory}
+          className="ml-auto"
+        >
+          Clear chat history
+        </Button>
       </div>
       <div className="flex w-full items-start justify-between gap-4 ">
         <Input

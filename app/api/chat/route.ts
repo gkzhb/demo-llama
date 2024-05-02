@@ -44,7 +44,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const llm = new Ollama({ model: "qwen:0.5b-chat-v1.5-q5_K_M", temperature: 0.75 });
+    const llm = new Ollama({
+      baseURL: "http://zhb:11434",
+      model: data?.model || "mistral-instruct:latest",
+    });
 
     const chatEngine = await createChatEngine(llm);
 
