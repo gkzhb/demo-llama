@@ -2,7 +2,9 @@ import { Message } from "ai";
 
 export interface ChatHandler {
   messages: Message[];
+  setMessages: (msgs: Message[]) => void;
   input: string;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   handleSubmit: (
     e: React.FormEvent<HTMLFormElement>,
