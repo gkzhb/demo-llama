@@ -21,11 +21,16 @@ export default function ChatInput(
   const { input, setInput, setMessages, handleSubmit } = props;
   const [chatInput, setChatInput] = useState("");
 
-  const { msgs, clearHistory, prevChar, setPrevChar, chatConfig } =
+  const { msgs, clearHistory, setPrevChar, addUserInstruction, chatConfig } =
     useContext(ChatMsgCtx);
 
-  const { model, characters, getUserPrompt, characterInfoMap, chatTopicSystemPrompt } =
-    chatConfig;
+  const {
+    model,
+    characters,
+    getUserPrompt,
+    characterInfoMap,
+    chatTopicSystemPrompt,
+  } = chatConfig;
   const onSubmit = (
     e: React.FormEvent<HTMLFormElement> = new CustomEvent("form") as any,
   ) => {
@@ -88,7 +93,8 @@ export default function ChatInput(
         <Button
           disabled={props.isLoading}
           onClick={() => {
-            setInput(chatInput);
+            addUserInstruction(chatInput);
+            setChatInput("");
           }}
         >
           Send message

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     const llm = new Ollama({
       baseURL: "http://zhb:11434",
-      model: data?.model || "mistral-instruct:latest",
+      model: data?.model || "qwen:7b-chat-v1.5-q5_K_M",
     });
 
     const chatEngine = await createChatEngine(llm);

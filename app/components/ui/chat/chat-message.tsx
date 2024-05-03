@@ -43,7 +43,7 @@ export default function ChatMessage(chatMessage: Message) {
   const char: string | undefined = (chatMessage as any).char;
   return (
     <div className="flex items-start gap-4 pr-5 pt-5">
-      <ChatAvatar role={chatMessage.role} />
+      <ChatAvatar role={char === "User" ? "user" : chatMessage.role} />
       <div className="group flex flex-1 justify-between gap-2">
         <div className="flex-1 space-y-4">
           {char && characterInfoMap[char] && (

@@ -2,8 +2,9 @@
 
 import { Message } from "ai";
 import { useChat } from "ai/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CharType, defaultChatConfig } from "../constants";
+import { generateRandomString } from "../utils";
 import { ChatMsgCtx, IChatMsgCtx } from "./context";
 import { ChatInput, ChatMessages } from "./ui/chat";
 
@@ -57,7 +58,7 @@ export default function ChatSection() {
     return (
       messages
         .map((item, idx) => {
-          if (idx === messages.length - 1) {
+          if (idx === messages.length - 1 && isLoading) {
             return { ...item, char: prevChar };
           }
           return msgMapRef.current.get(item.id) ?? item;
@@ -65,17 +66,40 @@ export default function ChatSection() {
         // hide system and user prompt
         .filter((msg) => !set.has(msg.role))
     );
-  }, [messages]);
+  }, [isLoading, messages, prevChar]);
 
   const ctx: IChatMsgCtx = {
     msgs,
     setMsgs,
     prevChar,
     setPrevChar,
-    clearHistory: () => {
+    clearHistory: useCallback(() => {
       setMsgs([]);
       setMessages([]);
-    },
+    }, []),
+    addUserInstruction: useCallback((instruction: string) => {
+      const userMsg: Message = {
+        role: "user",
+        content: instruction,
+        id: generateRandomString(),
+        // @ts-expect-error
+        char: "User",
+      };
+      const assistantMsg: Message = {
+        role: "assistant",
+        content: instruction,
+        id: generateRandomString(),
+        // @ts-expect-error
+        char: "User",
+      };
+      const addMsgs = (msgs: Message[]) => {
+        const list = msgs.slice();
+        list.push(userMsg, assistantMsg);
+        return list;
+      };
+      setMsgs(addMsgs);
+      setMessages(addMsgs(messagesRef.current));
+    }, [setMessages]),
     chatConfig: defaultChatConfig,
   };
 

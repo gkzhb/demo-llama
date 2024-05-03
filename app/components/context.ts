@@ -10,6 +10,8 @@ export interface IChatMsgCtx {
   setPrevChar: (prevChar: CharType) => void;
   /** clear chat history */
   clearHistory: () => void;
+  /** add user instrction */
+  addUserInstruction: (instruction: string) => void;
   chatConfig: IChatConfig;
 }
 export const ChatMsgCtx = React.createContext<IChatMsgCtx>({
@@ -19,4 +21,5 @@ export const ChatMsgCtx = React.createContext<IChatMsgCtx>({
   setPrevChar: () => {},
   clearHistory: () => {},
   chatConfig: defaultChatConfig,
+  addUserInstruction: () => {},
 });

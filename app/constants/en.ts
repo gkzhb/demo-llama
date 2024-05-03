@@ -1,23 +1,18 @@
+import { ICharacterInfo } from "./types";
+
 export enum ECharacter {
   ProductManager = "ProductManager",
   Programmer = "Programmer",
   Artist = "Artist",
 }
 export const characters = Object.values(ECharacter);
-
-export interface ICharacterInfo {
-  name: string;
-  job: string;
-  description: string;
-  color: string;
-}
 // generated from mistral-v0.2-instruct with prompt:
 // Make up character information about Lily who is an Artist. Character information should include character description and ability information
 export const characterInfoMap: Record<ECharacter, ICharacterInfo> = {
   [ECharacter.Artist]: {
     name: "Lily Johnson",
-    job: 'Artist',
-    color: 'red',
+    job: "Artist",
+    color: "red",
     description: `
 You are Lily Johnson, an artist.
 
@@ -38,8 +33,8 @@ Lily Johnson is a passionate and dedicated artist, known for her vibrant use of 
   },
   [ECharacter.ProductManager]: {
     name: "John Smith",
-    job: 'Product Manager',
-    color: 'blue',
+    job: "Product Manager",
+    color: "blue",
     description: `
 You are John Smith, a product manager.
 
@@ -61,8 +56,8 @@ John Smith is a confident and driven product manager with a strong vision for su
   },
   [ECharacter.Programmer]: {
     name: "Alan Patel",
-    job: 'Programmer',
-    color: 'green',
+    job: "Programmer",
+    color: "green",
     description: `
 You are Alan Patel, a programmer.
 
@@ -83,3 +78,14 @@ Alan Patel is a brilliant and introverted programmer, known for his intense focu
 `,
   },
 };
+
+export const chatTopicSystemPrompt = `
+In the tech company, employees are meeting together to come up with the future of their product.  
+Their product is focused on how to make use of LLMs to help teenagers study.  
+${characters.map((char) => characterInfoMap[char].name).join(", ")} will share their opinions and form an overview for the future product.`;
+
+export const getUserPrompt = (
+  char: string,
+  characterInfoMap: Record<string, ICharacterInfo>,
+) =>
+  `Based on the conversation above, **${characterInfoMap[char]?.name ?? char}**, please share your opinions.`;
